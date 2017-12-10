@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Escriba</title>
+
+	<script src="libraries/p5.js"></script>
+	<script src="libraries/p5.dom.js"></script>
+	<script src="libraries/p5.sound.js"></script>
+	<script src="libraries/p5.speech.js"></script>
+	<!-- script src="sketch.js"></script -->
+
+<script>
+
+// http://jsfiddle.net/7hyxcp7k/
+(function () {
+  var textFile = null,
+    makeTextFile = function (text) {
+      var data = new Blob([text], {type: 'text/plain'});
+  
+      // If we are replacing a previously generated file we need to
+      // manually revoke the object URL to avoid memory leaks.
+      if (textFile !== null) {
+        window.URL.revokeObjectURL(textFile);
+      }
+  
+      textFile = window.URL.createObjectURL(data);
+  
+      return textFile;
+    };
+  
+  
+    var create = document.getElementById('create'),
+      textbox = document.getElementById('textbox');
+  
+    create.addEventListener('click', function () {
+      var link = document.getElementById('descargar');
+      link.href = makeTextFile(textbox.value);
+      link.style.display = 'block';
+    }, false);
+  })();
+
+// https://github.com/CodingTrain/Rainbow-Code/tree/master/Courses/A2Z/session10/10-04_Speech_Recognition_with_p5.Speech
+function setup() {
+  noCanvas();
+  let texto     = document.getElementById("texto");
+  let lang = navigator.language || 'en-US';
+  let speechRec = new p5.SpeechRec(lang, gotSpeech);
+
+  let continuous = true;
+  let interim = true;
+  speechRec.start(continuous, interim);
+
+  function gotSpeech() {
+    if (speechRec.resultValue) {
+      frase = speechRec.resultString 
+      texto.value +=  frase.charAt(0).toUpperCase() + frase.slice(1) + ".\n"
+    }
+  }
+}
+
+
+
+</script>
+
+<style>
+textarea#texto {
+  width:100%;
+  min-height:300px;
+  max-height:500px;
+	box-sizing:border-box;
+	direction:ltr;
+	display:block;
+	max-width:100%;
+	line-height:1.5;
+	padding:15px 15px 30px;
+	border-radius:3px;
+	border:1px solid #F7E98D;
+	font:14px Tahoma, cursive;
+	transition:box-shadow 0.5s ease;
+	box-shadow:0 4px 6px rgba(0,0,0,0.1);
+	font-smoothing:subpixel-antialiased;
+	background:linear-gradient(#F9EFAF, #F7E98D);
+	background:-o-linear-gradient(#F9EFAF, #F7E98D);
+	background:-ms-linear-gradient(#F9EFAF, #F7E98D);
+	background:-moz-linear-gradient(#F9EFAF, #F7E98D);
+	background:-webkit-linear-gradient(#F9EFAF, #F7E98D);
+}
+
+
+textarea#raw {
+  width:100%;
+  box-sizing:border-box;
+  padding:15px 15px 30px;
+	border-radius:3px;
+}
+</style>
+
+</head>
+<body>
+
+
+<textarea id="texto" spellcheck="true"></textarea>
+<textarea id="raw" width="100%"></textarea>
+<button id="create">Generar archivo</button> 
+<a  download="texto2.txt" id="descargar" style="display: none">Descargar</a>
+</body>
+</html>
