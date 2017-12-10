@@ -15,8 +15,8 @@
 
 <script>
 
-// http://jsfiddle.net/7hyxcp7k/
-// Descargar archivo de texto
+// http://jsfiddle.net/k56eezxp/
+// Descargar archivo de texto resultante
 (function () {
   var textFile = null,
     makeTextFile = function (text) {
@@ -38,11 +38,21 @@
       textbox = document.getElementById('textbox');
   
     create.addEventListener('click', function () {
-      var link = document.getElementById('descargar');
+      var link = document.createElement('a');
+      link.setAttribute('download', 'info.txt');
       link.href = makeTextFile(textbox.value);
-      link.style.display = 'block';
+      document.body.appendChild(link);
+  
+      // wait for the link to be added to the document
+      window.requestAnimationFrame(function () {
+        var event = new MouseEvent('click');
+        link.dispatchEvent(event);
+        document.body.removeChild(link);
+      });
+      
     }, false);
   })();
+  
 
 // https://github.com/CodingTrain/Rainbow-Code/tree/master/Courses/A2Z/session10/10-04_Speech_Recognition_with_p5.Speech
 // Pasar discurso a texto
@@ -103,11 +113,11 @@ textarea#raw {
 
 </head>
 <body>
-
+    <textarea id="textbox">Type something here</textarea> 
+    <button id="create">Create file</button> 
 
 <textarea id="texto" spellcheck="true"></textarea>
 <textarea id="raw" width="100%"></textarea>
-<button id="create">Generar archivo</button> 
-<a  download="texto2.txt" id="descargar" style="display: none">Descargar</a>
+
 </body>
 </html>
