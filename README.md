@@ -11,4 +11,8 @@ La aplicación debe lanzarse desde un servidor web, por ejemplo:
 ```
 python -m SimpleHTTPServer
 ```
+o, si tienes instalado npm 5.2+, con:
 
+```
+npx serve
+```
